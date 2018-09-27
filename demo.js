@@ -30,7 +30,7 @@
 
   requirejs(['./zxcvbn'], function(zxcvbn) {
     return $(function() {
-      var _listener, i, last_q, len, password, r, ref, rendered, results_lst, user_dictionary;
+      var _listener, i, last_dictionary, last_q, len, password, r, ref, rendered, results_lst;
       window.zxcvbn = zxcvbn;
       results_lst = [];
       ref = test_passwords.split('\n');
@@ -52,16 +52,18 @@
       });
       $('#results').html(rendered);
       last_q = '';
-      user_dictionary = $('#user-dict').val().split('\n');
+      last_dictionary = [];
       _listener = function() {
-        var current, results;
+        var current, results, user_dictionary;
+        user_dictionary = $('#user-dict').val().split('\n');
         current = $('#search-bar').val();
         if (!current) {
           $('#search-results').html('');
           return;
         }
-        if (current !== last_q) {
+        if ((current !== last_q) || (user_dictionary !== last_dictionary)) {
           last_q = current;
+          last_dictionary = user_dictionary;
           r = zxcvbn(current, user_dictionary);
           round_logs(r);
           r.sequence_display = Mustache.render(props_tmpl, r);

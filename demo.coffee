@@ -313,14 +313,16 @@ requirejs ['./zxcvbn'], (zxcvbn) ->
     $('#results').html(rendered)
 
     last_q = ''
-    user_dictionary = $('#user-dict').val().split('\n')
+    last_dictionary = []
     _listener = ->
+      user_dictionary = $('#user-dict').val().split('\n')
       current = $('#search-bar').val()
       unless current
         $('#search-results').html('')
         return
-      if current != last_q
+      if (current != last_q) || (user_dictionary != last_dictionary)
         last_q = current
+        last_dictionary = user_dictionary
         r = zxcvbn(current, user_dictionary)
         round_logs(r)
         r.sequence_display = Mustache.render(props_tmpl, r)
