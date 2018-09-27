@@ -30,7 +30,7 @@
 
   requirejs(['./zxcvbn'], function(zxcvbn) {
     return $(function() {
-      var _listener, i, last_q, len, password, r, ref, rendered, results_lst;
+      var _listener, i, last_q, len, password, r, ref, rendered, results_lst, user_dictionary;
       window.zxcvbn = zxcvbn;
       results_lst = [];
       ref = test_passwords.split('\n');
@@ -52,6 +52,7 @@
       });
       $('#results').html(rendered);
       last_q = '';
+      user_dictionary = $('#user-dict').val().split('\n');
       _listener = function() {
         var current, results;
         current = $('#search-bar').val();
@@ -61,7 +62,7 @@
         }
         if (current !== last_q) {
           last_q = current;
-          r = zxcvbn(current);
+          r = zxcvbn(current, user_dictionary);
           round_logs(r);
           r.sequence_display = Mustache.render(props_tmpl, r);
           r.guess_times_display = Mustache.render(guess_times_tmpl, r.crack_times_display);
